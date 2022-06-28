@@ -2,9 +2,9 @@ name: Chaos Mesh test
 
 on:
   push:
-    branches: [development]
+    branches: [develop]
   pull_request:
-    branches: [development]
+    branches: [develop]
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
       - name: Deploy an application
         run: |
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
-          sleep 10
+          sleep 30
 
       - name: Check pods_1
         id: expected
@@ -51,7 +51,7 @@ jobs:
       - name: Check pods_2
         id: actual
         run: |
-          sleep 10
+          sleep 30
           echo "Check Kubernetes Self-Healing"
           running_pod_num=`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`
           echo ${running_pod_num}
