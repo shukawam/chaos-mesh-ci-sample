@@ -50,4 +50,6 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+      imagePullSecrets:
+        - name: ocir-secret
 ---
