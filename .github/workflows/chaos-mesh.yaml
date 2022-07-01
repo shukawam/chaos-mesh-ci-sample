@@ -33,7 +33,7 @@ jobs:
       - name: Deploy an application
         run: |
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
-          sleep 30
+          sleep 20
 
       - name: Check pods_1
         id: expected
@@ -51,7 +51,7 @@ jobs:
       - name: Check pods_2
         id: actual
         run: |
-          sleep 30
+          sleep 20
           echo "Check Kubernetes Self-Healing"
           running_pod_num=`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`
           echo ${running_pod_num}
