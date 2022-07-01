@@ -25,6 +25,13 @@ jobs:
 
       - name: Code Checkout 
         uses: actions/checkout@v2
+      
+      - name: Login to OCIR
+        uses: docker/login-action@v1
+        with:
+          registry: nrt.ocir.io
+          username: ${{ secrets.OCIR_USERNAME }}
+          password: ${{ secrets.OCIR_TOKEN }}
 
       - name: Build application
         run: |
@@ -32,6 +39,7 @@ jobs:
 
       - name: Deploy an application
         run: |
+          docker image ls
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
           sleep 20
           kubectl get pods
