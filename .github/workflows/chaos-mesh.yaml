@@ -26,13 +26,6 @@ jobs:
       - name: Code Checkout 
         uses: actions/checkout@v2
       
-      - name: Login to OCIR
-        uses: docker/login-action@v1
-        with:
-          registry: nrt.ocir.io
-          username: ${{ secrets.OCIR_USERNAME }}
-          password: ${{ secrets.OCIR_TOKEN }}
-
       - name: Build application
         run: |
           docker build -t greeting src/greeting
@@ -74,16 +67,16 @@ jobs:
           echo "actual: ${{ steps.actual.outputs.ACTUAL_POD_NUM }}"
           exit 1
       
-      - name: Create pull request
-        uses: actions/github-script@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'Update the Chaos Mesh Examples',
-              body: 'Update the Chaos Mesh Examples',
-              head: 'develop',
-              base: 'main'
-            })
+      # - name: Create pull request
+      #   uses: actions/github-script@v2
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       github.pulls.create({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         title: 'Update the Chaos Mesh Examples',
+      #         body: 'Update the Chaos Mesh Examples',
+      #         head: 'develop',
+      #         base: 'main'
+      #       })
