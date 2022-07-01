@@ -31,7 +31,7 @@ jobs:
         with:
           registry: nrt.ocir.io
           username: ${{ secrets.OCIR_USERNAME }}
-          password: ${{ secrets.OCIR_TOKEN }}
+          password: ${{ secrets.OCIR_PASSWORD }}
 
       - name: Build application
         run: |
@@ -39,7 +39,7 @@ jobs:
 
       - name: Deploy an application
         run: |
-          kubectl create secret docker-registry ocir-secret --docker-server nrt.ocir.io --docker-username ${{ secrets.OCIR_USERNAME }} --docker-password ${{ secrets.OCIR_TOKEN }}
+          kubectl create secret docker-registry ocir-secret --docker-server nrt.ocir.io --docker-username ${{ secrets.OCIR_USERNAME }} --docker-password ${{ secrets.OCIR_PASSWORD }}
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
           kubectl wait --for=condition=Ready deploy/greeting --namespace default --timeout=60s
           echo "info: waiting for greeting pods in default namespace to be ready"
