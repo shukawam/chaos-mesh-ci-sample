@@ -35,7 +35,8 @@ jobs:
 
       - name: Build application
         run: |
-          docker build -t greeting src/greeting
+          docker build -t nrt.ocir.io/orasejapan/shukawam/greeting src/greeting 
+          docker push nrt.ocir.io/orasejapan/shukawam/greeting
 
       - name: Deploy an application
         run: |
