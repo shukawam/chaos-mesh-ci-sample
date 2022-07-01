@@ -34,6 +34,7 @@ jobs:
         run: |
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
           sleep 20
+          kubectl get pods
 
       - name: Check pods_1
         id: expected
