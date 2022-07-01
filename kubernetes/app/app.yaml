@@ -46,8 +46,10 @@ spec:
     spec:
       containers:
       - name: greeting
-        image: greeting
+        image: nrt.ocir.io/orasejapan/shukawam/greeting
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+      imagePullSecrets:
+        - name: ocir-secret
 ---
