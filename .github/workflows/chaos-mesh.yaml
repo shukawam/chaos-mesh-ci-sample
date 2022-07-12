@@ -46,48 +46,28 @@ jobs:
             --docker-password="${{ secrets.OCIR_PASSWORD }}"
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
 
-      - name: Check pods_1
+      - name: Prepare K6
         id: expected
         run: |
-          kubectl -n default wait --for=condition=Ready pods --all --timeout 30s
-          echo "info: waiting for greeting pods in default namespace to be ready"
-          running_pod_num=`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`
-          echo ${running_pod_num}
-          echo "::set-output name=EXPECTED_POD_NUM::${running_pod_num}"
+          kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/k6/k6-configmap.yaml
+          kubectl port-forward service/greeting 8080:8080
 
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
         env:
-          CFG_FILE: https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/chaos-mesh/pod-kill.yaml
-          CHAOS_MESH_VERSION: v2.2.1
+          CFG_FILE: https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/chaos-mesh/pod-kill-workflow.yaml
+          CHAOS_MESH_VERSION: v2.2.2
 
-      - name: Check pods_2
-        id: actual
-        run: |
-          kubectl -n default wait --for=condition=Ready pods --all --timeout 30s
-          echo "info: waiting for greeting pods in default namespace to be ready"
-          running_pod_num=`kubectl get pods --field-selector=status.phase=Running --no-headers | wc -l`
-          echo ${running_pod_num}
-          echo "::set-output name=ACTUAL_POD_NUM::${running_pod_num}"
-
-      - name: Handling
-        if: ${{ steps.expected.outputs.EXPECTED_POD_NUM != steps.actual.outputs.ACTUAL_POD_NUM }}
-        run: |
-          echo "Failed Chaos Experiment."
-          echo "expected: ${{ steps.expected.outputs.EXPECTED_POD_NUM }}"
-          echo "actual: ${{ steps.actual.outputs.ACTUAL_POD_NUM }}"
-          exit 1
-      
-      - name: Create pull request
-        uses: actions/github-script@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'Update the Chaos Mesh Examples',
-              body: 'Update the Chaos Mesh Examples',
-              head: 'develop',
-              base: 'main'
-            })
+      # - name: Create pull request
+      #   uses: actions/github-script@v2
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       github.pulls.create({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         title: 'Update the Chaos Mesh Examples',
+      #         body: 'Update the Chaos Mesh Examples',
+      #         head: 'develop',
+      #         base: 'main'
+      #       })
