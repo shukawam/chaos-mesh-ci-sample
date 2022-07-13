@@ -20,8 +20,8 @@ spec:
           command:
             - k6
             - run
-            - "--out"
-            - "influxdb=http://influxdb.shukawam.com/ochacafe"
+            # - "--out"
+            # - "influxdb=http://influxdb.shukawam.com/ochacafe"
             - "--vus"
             - "10"
             - "--duration"
@@ -60,7 +60,8 @@ spec:
           command:
             - k6
             - run
-            - "--out"
+            # - "--out"
+            # - "influxdb=http://influxdb.shukawam.com/ochacafe"
             - "--vus"
             - "10"
             - "--duration"
