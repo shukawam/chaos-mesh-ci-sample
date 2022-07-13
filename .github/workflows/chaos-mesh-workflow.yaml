@@ -1,4 +1,4 @@
-name: Chaos Mesh test
+name: Chaos Mesh workflow test
 
 on:
   push:
