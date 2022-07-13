@@ -45,6 +45,8 @@ jobs:
             --docker-username="${{ secrets.OCIR_USERNAME }}" \
             --docker-password="${{ secrets.OCIR_PASSWORD }}"
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/app/app.yaml
+          kubectl -n default wait --for=condition=Ready pods --all --timeout 30s
+          echo "info: waiting for greeting pods in default namespace to be ready"
 
       - name: Prepare K6
         id: expected
