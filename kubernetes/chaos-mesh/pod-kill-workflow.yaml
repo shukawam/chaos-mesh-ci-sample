@@ -1,0 +1,76 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow
+metadata:
+  name: pod-kill-workflow
+spec:
+  entry: entry
+  templates:
+    - name: entry
+      templateType: Serial
+      deadline: 3m
+      children:
+        - k6-load-test-in-steady-state
+        - event-injection
+    - name: k6-load-test-in-steady-state
+      templateType: Task
+      task:
+        container:
+          name: k6-load-test
+          image: grafana/k6
+          command:
+            - k6
+            - run
+            # - "--out"
+            # - "influxdb=http://influxdb.shukawam.com/ochacafe"
+            - "--vus"
+            - "10"
+            - "--duration"
+            - "30s"
+            - "script.js"
+          volumeMounts:
+            - mountPath: /home/k6
+              name: k6-script
+        volumes:
+          - name: k6-script
+            configMap:
+              name: k6-configmap
+    - name: event-injection
+      templateType: Parallel
+      deadline: 2m
+      children:
+        - pod-kill-random
+        - k6-load-test-in-chaos-state
+    - name: pod-kill-random
+      templateType: PodChaos
+      deadline: 1m
+      podChaos:
+        selector:
+          namespaces:
+            - default
+          labelSelectors:
+            app: greeting
+        mode: all
+        action: pod-kill
+    - name: k6-load-test-in-chaos-state
+      templateType: Task
+      task:
+        container:
+          name: k6-load-test
+          image: grafana/k6
+          command:
+            - k6
+            - run
+            # - "--out"
+            # - "influxdb=http://influxdb.shukawam.com/ochacafe"
+            - "--vus"
+            - "10"
+            - "--duration"
+            - "30s"
+            - "script.js"
+          volumeMounts:
+            - mountPath: /home/k6
+              name: k6-script
+        volumes:
+          - name: k6-script
+            configMap:
+              name: k6-configmap
