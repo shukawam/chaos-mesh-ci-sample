@@ -52,7 +52,7 @@ jobs:
         id: expected
         run: |
           kubectl apply -f https://raw.githubusercontent.com/shukawam/chaos-mesh-examples/develop/kubernetes/k6/k6-configmap.yaml
-          kubectl port-forward service/greeting 8080:8080
+          kubectl port-forward service/greeting 8080:8080 &
 
       - name: Run chaos mesh action
         uses: shukawam/chaos-mesh-action@main
