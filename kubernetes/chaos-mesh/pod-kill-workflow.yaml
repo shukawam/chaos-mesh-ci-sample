@@ -39,7 +39,7 @@ spec:
       children:
         - pod-kill-random
         - k6-load-test-in-chaos-state
-    - name: network-latency-1000ms
+    - name: pod-kill-random
       templateType: PodChaos
       deadline: 1m
       podChaos:
