@@ -49,7 +49,7 @@ spec:
             - default
           labelSelectors:
             app: greeting
-        mode: one
+        mode: all
         action: pod-kill
     - name: k6-load-test-in-chaos-state
       templateType: Task
